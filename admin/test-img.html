@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <title>Document</title>
+     <script src="../jquery-3.2.1.js"></script>
+     <style type="text/css">
+        .xiaotu{
+            display:block;
+            height: 300px;
+            width: 300px;
+
+        }
+
+     </style>
+ </head>
+ <body>
+     <form enctype="multipart/form-data" method="post">
+         <input type="file" name='image' id="imagelist">
+
+     </form>
+     <img class="xiaotu" src="">
+     <button onclick="Req_ajax()"> 上传</button>
+ <script>
+     var OL_Action_Root = 'http://localhost:3001';
+ function Req_ajax(){           
+     console.log(111)
+     console.log($("#imagelist"))
+     var formData = new FormData()//创建一个formdata对象
+     console.log(formData)
+     formData.append("test",$("#imagelist")[0].files[0])  
+      console.log(formData)
+       console.log(formData.get('test'))
+     
+     $.ajax({
+         url: OL_Action_Root+'/upload/img',
+         type: 'POST',
+         data: formData,
+         cache: false,
+         contentType: false,
+         processData: false,
+         success: function(data){
+             var res = data;
+             if(res.err == 0)
+             {
+                 $('.xiaotu').attr('src',OL_Action_Root+res.data)
+             }
+             else
+             {
+                 document.getElementById("status").innerHTML = "<span style='color:#EF0000'>文件上传失败！<br>原因是："+res.msg+"</span>";
+             }
+         },
+         error: function(jqXHR, textStatus, errorThrown){
+             document.getElementById("status").innerHTML = "<span style='color:#EF0000'>连接不到服务器，请检查网络！</span>";
+         }
+     });
+ }
+
+ </script>
+ </body>
+ </html>
